@@ -10,6 +10,6 @@ const SAY_HELLO = defineString("SAY_HELLO");
 export const helloWorld = onRequest(
   { region: REGION, timeoutSeconds: TIMEOUT_SECONDS },
   (req, res) => {
-    console.log(SAY_HELLO.value());
+    res.send(SAY_HELLO.value());
   }
 );

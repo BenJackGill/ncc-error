@@ -1,0 +1,190 @@
+[debug] [2023-10-21T09:43:37.232Z] ----------------------------------------------------------------------
+[debug] [2023-10-21T09:43:37.234Z] Command:       /Users/BenJackGill/.nvm/versions/node/v18.17.0/bin/node /Users/BenJackGill/.nvm/versions/node/v18.17.0/bin/firebase deploy --only functions
+[debug] [2023-10-21T09:43:37.234Z] CLI Version:   12.7.0
+[debug] [2023-10-21T09:43:37.234Z] Platform:      darwin
+[debug] [2023-10-21T09:43:37.234Z] Node Version:  v18.17.0
+[debug] [2023-10-21T09:43:37.235Z] Time:          Sat Oct 21 2023 16:43:37 GMT+0700 (GMT+07:00)
+[debug] [2023-10-21T09:43:37.235Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-10-21T09:43:37.272Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-10-21T09:43:37.272Z] > authorizing via signed-in user (bennygill@gmail.com)
+[debug] [2023-10-21T09:43:37.272Z] [iam] checking project agentcakeapp for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2023-10-21T09:43:37.273Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/agentcakeapp:testIamPermissions [none]
+[debug] [2023-10-21T09:43:37.273Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/agentcakeapp:testIamPermissions x-goog-quota-user=projects/agentcakeapp
+[debug] [2023-10-21T09:43:37.273Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/agentcakeapp:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2023-10-21T09:43:38.274Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/agentcakeapp:testIamPermissions 200
+[debug] [2023-10-21T09:43:38.275Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/agentcakeapp:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2023-10-21T09:43:38.275Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/agentcakeapp/serviceAccounts/agentcakeapp@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2023-10-21T09:43:38.275Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/agentcakeapp/serviceAccounts/agentcakeapp@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2023-10-21T09:43:39.289Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/agentcakeapp/serviceAccounts/agentcakeapp@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2023-10-21T09:43:39.289Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/agentcakeapp/serviceAccounts/agentcakeapp@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'agentcakeapp'...
+[info] 
+[info] i  deploying functions 
+[info] Running command: npm --prefix "$RESOURCE_DIR" run build
+[info] ✔  functions: Finished running predeploy script. 
+[debug] [2023-10-21T09:43:41.863Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/agentcakeapp [none]
+[debug] [2023-10-21T09:43:42.256Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/agentcakeapp 200
+[debug] [2023-10-21T09:43:42.257Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/agentcakeapp {"projectId":"agentcakeapp","projectNumber":"522930320005","displayName":"AgentCakeApp","name":"projects/agentcakeapp","resources":{"hostingSite":"agentcakeapp","storageBucket":"agentcakeapp.appspot.com","locationId":"australia-southeast1"},"state":"ACTIVE","etag":"1_ca92a3cd-473a-40ea-8d18-3742898a3eff"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2023-10-21T09:43:42.260Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/cloudfunctions.googleapis.com [none]
+[debug] [2023-10-21T09:43:42.260Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/agentcakeapp
+[debug] [2023-10-21T09:43:42.262Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/runtimeconfig.googleapis.com [none]
+[debug] [2023-10-21T09:43:42.263Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/agentcakeapp
+[debug] [2023-10-21T09:43:42.264Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/cloudbuild.googleapis.com [none]
+[debug] [2023-10-21T09:43:42.264Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/cloudbuild.googleapis.com x-goog-quota-user=projects/agentcakeapp
+[debug] [2023-10-21T09:43:42.265Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/artifactregistry.googleapis.com [none]
+[debug] [2023-10-21T09:43:42.266Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/artifactregistry.googleapis.com x-goog-quota-user=projects/agentcakeapp
+[debug] [2023-10-21T09:43:43.600Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/runtimeconfig.googleapis.com 200
+[debug] [2023-10-21T09:43:43.600Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/runtimeconfig.googleapis.com [omitted]
+[debug] [2023-10-21T09:43:43.601Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/cloudbuild.googleapis.com 200
+[debug] [2023-10-21T09:43:43.601Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/cloudbuild.googleapis.com [omitted]
+[info] ✔  functions: required API cloudbuild.googleapis.com is enabled 
+[debug] [2023-10-21T09:43:43.603Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/artifactregistry.googleapis.com 200
+[debug] [2023-10-21T09:43:43.603Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/artifactregistry.googleapis.com [omitted]
+[info] ✔  artifactregistry: required API artifactregistry.googleapis.com is enabled 
+[debug] [2023-10-21T09:43:43.604Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/cloudfunctions.googleapis.com 200
+[debug] [2023-10-21T09:43:43.604Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/cloudfunctions.googleapis.com [omitted]
+[info] ✔  functions: required API cloudfunctions.googleapis.com is enabled 
+[debug] [2023-10-21T09:43:43.605Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/agentcakeapp/adminSdkConfig [none]
+[debug] [2023-10-21T09:43:44.298Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/agentcakeapp/adminSdkConfig 200
+[debug] [2023-10-21T09:43:44.298Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/agentcakeapp/adminSdkConfig {"projectId":"agentcakeapp","storageBucket":"agentcakeapp.appspot.com","locationId":"australia-southeast1"}
+[debug] [2023-10-21T09:43:44.299Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/agentcakeapp/configs [none]
+[debug] [2023-10-21T09:43:44.625Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/agentcakeapp/configs 200
+[debug] [2023-10-21T09:43:44.626Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/agentcakeapp/configs {}
+[debug] [2023-10-21T09:43:44.628Z] Validating nodejs source
+[debug] [2023-10-21T09:43:45.072Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.0",
+    "firebase-functions-test": "^3.1.0",
+    "@vercel/ncc": "^0.38.1"
+  },
+  "private": true
+}
+[debug] [2023-10-21T09:43:45.072Z] Building nodejs source
+[info] i  functions: Loading and analyzing source code for codebase default to determine what to deploy 
+[debug] [2023-10-21T09:43:45.072Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-10-21T09:43:45.078Z] Found firebase-functions binary at '/Users/BenJackGill/Dev/functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8886
+
+[debug] [2023-10-21T09:43:45.252Z] Got response from /__/functions.yaml {"endpoints":{"helloWorld":{"availableMemoryMb":null,"timeoutSeconds":"{{ params.TIMEOUT_SECONDS }}","minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":"{{ params.REGION }}","labels":{},"httpsTrigger":{},"entryPoint":"helloWorld"}},"specVersion":"v1alpha1","requiredAPIs":[],"params":[{"name":"REGION","type":"string"},{"name":"TIMEOUT_SECONDS","type":"int"},{"name":"SAY_HELLO","type":"string"}]}
+[info] shutdown requested via /__/quitquitquit
+
+[info] i  functions: Loaded environment variables from .env.agentcakeapp. 
+[debug] [2023-10-21T09:44:17.847Z] ----------------------------------------------------------------------
+[debug] [2023-10-21T09:44:17.848Z] Command:       /Users/BenJackGill/.nvm/versions/node/v18.17.0/bin/node /Users/BenJackGill/.nvm/versions/node/v18.17.0/bin/firebase deploy --only functions
+[debug] [2023-10-21T09:44:17.848Z] CLI Version:   12.7.0
+[debug] [2023-10-21T09:44:17.848Z] Platform:      darwin
+[debug] [2023-10-21T09:44:17.849Z] Node Version:  v18.17.0
+[debug] [2023-10-21T09:44:17.849Z] Time:          Sat Oct 21 2023 16:44:17 GMT+0700 (GMT+07:00)
+[debug] [2023-10-21T09:44:17.849Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-10-21T09:44:17.887Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-10-21T09:44:17.888Z] > authorizing via signed-in user (bennygill@gmail.com)
+[debug] [2023-10-21T09:44:17.888Z] [iam] checking project agentcakeapp for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2023-10-21T09:44:17.889Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/agentcakeapp:testIamPermissions [none]
+[debug] [2023-10-21T09:44:17.889Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/agentcakeapp:testIamPermissions x-goog-quota-user=projects/agentcakeapp
+[debug] [2023-10-21T09:44:17.889Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/agentcakeapp:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2023-10-21T09:44:18.900Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/agentcakeapp:testIamPermissions 200
+[debug] [2023-10-21T09:44:18.901Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/agentcakeapp:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2023-10-21T09:44:18.901Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/agentcakeapp/serviceAccounts/agentcakeapp@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2023-10-21T09:44:18.901Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/agentcakeapp/serviceAccounts/agentcakeapp@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2023-10-21T09:44:19.803Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/agentcakeapp/serviceAccounts/agentcakeapp@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2023-10-21T09:44:19.803Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/agentcakeapp/serviceAccounts/agentcakeapp@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'agentcakeapp'...
+[info] 
+[info] i  deploying functions 
+[info] Running command: npm --prefix "$RESOURCE_DIR" run build
+[info] ✔  functions: Finished running predeploy script. 
+[debug] [2023-10-21T09:44:22.481Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/agentcakeapp [none]
+[debug] [2023-10-21T09:44:22.811Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/agentcakeapp 200
+[debug] [2023-10-21T09:44:22.812Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/agentcakeapp {"projectId":"agentcakeapp","projectNumber":"522930320005","displayName":"AgentCakeApp","name":"projects/agentcakeapp","resources":{"hostingSite":"agentcakeapp","storageBucket":"agentcakeapp.appspot.com","locationId":"australia-southeast1"},"state":"ACTIVE","etag":"1_ca92a3cd-473a-40ea-8d18-3742898a3eff"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2023-10-21T09:44:22.815Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/cloudfunctions.googleapis.com [none]
+[debug] [2023-10-21T09:44:22.815Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/agentcakeapp
+[debug] [2023-10-21T09:44:22.819Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/runtimeconfig.googleapis.com [none]
+[debug] [2023-10-21T09:44:22.819Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/agentcakeapp
+[debug] [2023-10-21T09:44:22.820Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/cloudbuild.googleapis.com [none]
+[debug] [2023-10-21T09:44:22.821Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/cloudbuild.googleapis.com x-goog-quota-user=projects/agentcakeapp
+[debug] [2023-10-21T09:44:22.823Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/artifactregistry.googleapis.com [none]
+[debug] [2023-10-21T09:44:22.823Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/artifactregistry.googleapis.com x-goog-quota-user=projects/agentcakeapp
+[debug] [2023-10-21T09:44:24.088Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/runtimeconfig.googleapis.com 200
+[debug] [2023-10-21T09:44:24.089Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/runtimeconfig.googleapis.com [omitted]
+[debug] [2023-10-21T09:44:24.090Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/cloudbuild.googleapis.com 200
+[debug] [2023-10-21T09:44:24.090Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/cloudbuild.googleapis.com [omitted]
+[info] ✔  functions: required API cloudbuild.googleapis.com is enabled 
+[debug] [2023-10-21T09:44:24.136Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/artifactregistry.googleapis.com 200
+[debug] [2023-10-21T09:44:24.137Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/artifactregistry.googleapis.com [omitted]
+[info] ✔  artifactregistry: required API artifactregistry.googleapis.com is enabled 
+[debug] [2023-10-21T09:44:24.138Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/cloudfunctions.googleapis.com 200
+[debug] [2023-10-21T09:44:24.138Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/agentcakeapp/services/cloudfunctions.googleapis.com [omitted]
+[info] ✔  functions: required API cloudfunctions.googleapis.com is enabled 
+[debug] [2023-10-21T09:44:24.138Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/agentcakeapp/adminSdkConfig [none]
+[debug] [2023-10-21T09:44:24.935Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/agentcakeapp/adminSdkConfig 200
+[debug] [2023-10-21T09:44:24.935Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/agentcakeapp/adminSdkConfig {"projectId":"agentcakeapp","storageBucket":"agentcakeapp.appspot.com","locationId":"australia-southeast1"}
+[debug] [2023-10-21T09:44:24.936Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/agentcakeapp/configs [none]
+[debug] [2023-10-21T09:44:25.345Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/agentcakeapp/configs 200
+[debug] [2023-10-21T09:44:25.345Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/agentcakeapp/configs {}
+[debug] [2023-10-21T09:44:25.348Z] Validating nodejs source
+[debug] [2023-10-21T09:44:25.796Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.0",
+    "firebase-functions-test": "^3.1.0",
+    "@vercel/ncc": "^0.38.1"
+  },
+  "private": true
+}
+[debug] [2023-10-21T09:44:25.796Z] Building nodejs source
+[info] i  functions: Loading and analyzing source code for codebase default to determine what to deploy 
+[debug] [2023-10-21T09:44:25.797Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-10-21T09:44:25.802Z] Found firebase-functions binary at '/Users/BenJackGill/Dev/functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8654
+
+[debug] [2023-10-21T09:44:25.978Z] Got response from /__/functions.yaml {"endpoints":{"helloWorld":{"availableMemoryMb":null,"timeoutSeconds":"{{ params.TIMEOUT_SECONDS }}","minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":"{{ params.REGION }}","labels":{},"httpsTrigger":{},"entryPoint":"helloWorld"}},"specVersion":"v1alpha1","requiredAPIs":[],"params":[{"name":"REGION","type":"string"},{"name":"TIMEOUT_SECONDS","type":"int"},{"name":"SAY_HELLO","type":"string"}]}
+[info] shutdown requested via /__/quitquitquit
+
+[info] i  functions: Loaded environment variables from .env.agentcakeapp. 
