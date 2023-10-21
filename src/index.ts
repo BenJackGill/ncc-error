@@ -1,20 +1,15 @@
-import { defineInt } from "firebase-functions/params";
-import { onTaskDispatched } from "firebase-functions/v2/tasks";
+import { defineString, defineInt } from "firebase-functions/params";
+import { onRequest } from "firebase-functions/v2/https";
 
 // Making the parameterized variables
-const TASK_QUEUE_MAX_CONCURRENT_DISPATCHES = defineInt(
-  "TASK_QUEUE_MAX_CONCURRENT_DISPATCHES"
-);
-const SAY_HELLO = defineInt("SAY_HELLO");
+const REGION = defineString("REGION");
+const TIMEOUT_SECONDS = defineInt("TIMEOUT_SECONDS");
+const SAY_HELLO = defineString("SAY_HELLO");
 
 // Firebase function
-export const helloWorld = onTaskDispatched(
-  {
-    rateLimits: {
-      maxConcurrentDispatches: TASK_QUEUE_MAX_CONCURRENT_DISPATCHES,
-    },
-  },
-  (req) => {
+export const helloWorld = onRequest(
+  { region: REGION, timeoutSeconds: TIMEOUT_SECONDS },
+  (req, res) => {
     console.log(SAY_HELLO.value());
   }
 );

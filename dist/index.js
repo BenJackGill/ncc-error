@@ -14099,93 +14099,6 @@ function wrapOnCallHandler(options, handler) {
 
 /***/ }),
 
-/***/ 737:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-// The MIT License (MIT)
-//
-// Copyright (c) 2022 Firebase
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.onDispatchHandler = void 0;
-const logger = __nccwpck_require__(5957);
-const https = __nccwpck_require__(3653);
-/** @internal */
-function onDispatchHandler(handler) {
-    return async (req, res) => {
-        var _a;
-        try {
-            if (!https.isValidRequest(req)) {
-                logger.error("Invalid request, unable to process.");
-                throw new https.HttpsError("invalid-argument", "Bad Request");
-            }
-            const context = {};
-            if (!process.env.FUNCTIONS_EMULATOR) {
-                const authHeader = req.header("Authorization") || "";
-                const token = (_a = authHeader.match(/^Bearer (.*)$/)) === null || _a === void 0 ? void 0 : _a[1];
-                // Note: this should never happen since task queue functions are guarded by IAM.
-                if (!token) {
-                    throw new https.HttpsError("unauthenticated", "Unauthenticated");
-                }
-                // We skip authenticating the token since tq functions are guarded by IAM.
-                const authToken = https.unsafeDecodeIdToken(token);
-                context.auth = {
-                    uid: authToken.uid,
-                    token: authToken,
-                };
-            }
-            const data = https.decode(req.body.data);
-            if (handler.length === 2) {
-                await handler(data, context);
-            }
-            else {
-                const arg = {
-                    ...context,
-                    data,
-                };
-                // For some reason the type system isn't picking up that the handler
-                // is a one argument function.
-                await handler(arg);
-            }
-            res.status(204).end();
-        }
-        catch (err) {
-            let httpErr = err;
-            if (!(err instanceof https.HttpsError)) {
-                // This doesn't count as an 'explicit' error.
-                logger.error("Unhandled error", err);
-                httpErr = new https.HttpsError("internal", "INTERNAL");
-            }
-            const { status } = httpErr.httpErrorCode;
-            const body = { error: httpErr.toJSON() };
-            res.status(status).send(body);
-        }
-    };
-}
-exports.onDispatchHandler = onDispatchHandler;
-
-
-/***/ }),
-
 /***/ 7932:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -15311,14 +15224,14 @@ exports.__getSpec = __getSpec;
 
 /***/ }),
 
-/***/ 2113:
+/***/ 6274:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 // The MIT License (MIT)
 //
-// Copyright (c) 2022 Firebase
+// Copyright (c) 2021 Firebase
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -15338,17 +15251,20 @@ exports.__getSpec = __getSpec;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.onTaskDispatched = void 0;
+exports.onCall = exports.onRequest = exports.HttpsError = void 0;
 /**
- * Cloud functions to handle Tasks enqueued with Google Cloud Tasks.
+ * Cloud functions to handle HTTPS request or callable RPCs.
  * @packageDocumentation
  */
+const cors = __nccwpck_require__(5287);
 const encoding_1 = __nccwpck_require__(3320);
-const tasks_1 = __nccwpck_require__(737);
-const options = __nccwpck_require__(601);
 const trace_1 = __nccwpck_require__(5842);
+const debug_1 = __nccwpck_require__(2278);
+const https_1 = __nccwpck_require__(3653);
+Object.defineProperty(exports, "HttpsError", ({ enumerable: true, get: function () { return https_1.HttpsError; } }));
 const manifest_1 = __nccwpck_require__(728);
-function onTaskDispatched(optsOrHandler, handler) {
+const options = __nccwpck_require__(601);
+function onRequest(optsOrHandler, handler) {
     let opts;
     if (arguments.length === 1) {
         opts = {};
@@ -15357,20 +15273,30 @@ function onTaskDispatched(optsOrHandler, handler) {
     else {
         opts = optsOrHandler;
     }
-    // onDispatchHandler sniffs the function length to determine which API to present.
-    // fix the length to prevent api versions from being mismatched.
-    const fixedLen = (req) => handler(req);
-    const func = (0, trace_1.wrapTraceContext)((0, tasks_1.onDispatchHandler)(fixedLen));
-    Object.defineProperty(func, "__trigger", {
+    if ((0, debug_1.isDebugFeatureEnabled)("enableCors") || "cors" in opts) {
+        let origin = opts.cors;
+        if ((0, debug_1.isDebugFeatureEnabled)("enableCors")) {
+            // Respect `cors: false` to turn off cors even if debug feature is enabled.
+            origin = opts.cors === false ? false : true;
+        }
+        const userProvidedHandler = handler;
+        handler = (req, res) => {
+            return new Promise((resolve) => {
+                res.on("finish", resolve);
+                cors({ origin })(req, res, () => {
+                    resolve(userProvidedHandler(req, res));
+                });
+            });
+        };
+    }
+    handler = (0, trace_1.wrapTraceContext)(handler);
+    Object.defineProperty(handler, "__trigger", {
         get: () => {
             const baseOpts = options.optionsToTriggerAnnotations(options.getGlobalOptions());
             // global options calls region a scalar and https allows it to be an array,
             // but optionsToTriggerAnnotations handles both cases.
             const specificOpts = options.optionsToTriggerAnnotations(opts);
-            const taskQueueTrigger = {};
-            (0, encoding_1.copyIfPresent)(taskQueueTrigger, opts, "retryConfig", "rateLimits");
-            (0, encoding_1.convertIfPresent)(taskQueueTrigger, opts, "invoker", "invoker", encoding_1.convertInvoker);
-            return {
+            const trigger = {
                 platform: "gcfv2",
                 ...baseOpts,
                 ...specificOpts,
@@ -15378,38 +15304,93 @@ function onTaskDispatched(optsOrHandler, handler) {
                     ...baseOpts === null || baseOpts === void 0 ? void 0 : baseOpts.labels,
                     ...specificOpts === null || specificOpts === void 0 ? void 0 : specificOpts.labels,
                 },
-                taskQueueTrigger,
+                httpsTrigger: {
+                    allowInsecure: false,
+                },
             };
+            (0, encoding_1.convertIfPresent)(trigger.httpsTrigger, opts, "invoker", "invoker", encoding_1.convertInvoker);
+            return trigger;
         },
     });
     const baseOpts = options.optionsToEndpoint(options.getGlobalOptions());
     // global options calls region a scalar and https allows it to be an array,
-    // but optionsToManifestEndpoint handles both cases.
+    // but optionsToTriggerAnnotations handles both cases.
     const specificOpts = options.optionsToEndpoint(opts);
-    func.__endpoint = {
-        platform: "gcfv2",
+    const endpoint = {
         ...(0, manifest_1.initV2Endpoint)(options.getGlobalOptions(), opts),
+        platform: "gcfv2",
         ...baseOpts,
         ...specificOpts,
         labels: {
             ...baseOpts === null || baseOpts === void 0 ? void 0 : baseOpts.labels,
             ...specificOpts === null || specificOpts === void 0 ? void 0 : specificOpts.labels,
         },
-        taskQueueTrigger: (0, manifest_1.initTaskQueueTrigger)(options.getGlobalOptions(), opts),
+        httpsTrigger: {},
     };
-    (0, encoding_1.copyIfPresent)(func.__endpoint.taskQueueTrigger.retryConfig, opts.retryConfig, "maxAttempts", "maxBackoffSeconds", "maxDoublings", "maxRetrySeconds", "minBackoffSeconds");
-    (0, encoding_1.copyIfPresent)(func.__endpoint.taskQueueTrigger.rateLimits, opts.rateLimits, "maxConcurrentDispatches", "maxDispatchesPerSecond");
-    (0, encoding_1.convertIfPresent)(func.__endpoint.taskQueueTrigger, opts, "invoker", "invoker", encoding_1.convertInvoker);
-    func.__requiredAPIs = [
-        {
-            api: "cloudtasks.googleapis.com",
-            reason: "Needed for task queue functions",
+    (0, encoding_1.convertIfPresent)(endpoint.httpsTrigger, opts, "invoker", "invoker", encoding_1.convertInvoker);
+    handler.__endpoint = endpoint;
+    return handler;
+}
+exports.onRequest = onRequest;
+function onCall(optsOrHandler, handler) {
+    var _a;
+    let opts;
+    if (arguments.length === 1) {
+        opts = {};
+        handler = optsOrHandler;
+    }
+    else {
+        opts = optsOrHandler;
+    }
+    const origin = (0, debug_1.isDebugFeatureEnabled)("enableCors") ? true : "cors" in opts ? opts.cors : true;
+    // onCallHandler sniffs the function length to determine which API to present.
+    // fix the length to prevent api versions from being mismatched.
+    const fixedLen = (req) => handler(req);
+    const func = (0, https_1.onCallHandler)({
+        cors: { origin, methods: "POST" },
+        enforceAppCheck: (_a = opts.enforceAppCheck) !== null && _a !== void 0 ? _a : options.getGlobalOptions().enforceAppCheck,
+        consumeAppCheckToken: opts.consumeAppCheckToken,
+    }, fixedLen);
+    Object.defineProperty(func, "__trigger", {
+        get: () => {
+            const baseOpts = options.optionsToTriggerAnnotations(options.getGlobalOptions());
+            // global options calls region a scalar and https allows it to be an array,
+            // but optionsToTriggerAnnotations handles both cases.
+            const specificOpts = options.optionsToTriggerAnnotations(opts);
+            return {
+                platform: "gcfv2",
+                ...baseOpts,
+                ...specificOpts,
+                labels: {
+                    ...baseOpts === null || baseOpts === void 0 ? void 0 : baseOpts.labels,
+                    ...specificOpts === null || specificOpts === void 0 ? void 0 : specificOpts.labels,
+                    "deployment-callable": "true",
+                },
+                httpsTrigger: {
+                    allowInsecure: false,
+                },
+            };
         },
-    ];
+    });
+    const baseOpts = options.optionsToEndpoint(options.getGlobalOptions());
+    // global options calls region a scalar and https allows it to be an array,
+    // but optionsToEndpoint handles both cases.
+    const specificOpts = options.optionsToEndpoint(opts);
+    func.__endpoint = {
+        ...(0, manifest_1.initV2Endpoint)(options.getGlobalOptions(), opts),
+        platform: "gcfv2",
+        ...baseOpts,
+        ...specificOpts,
+        labels: {
+            ...baseOpts === null || baseOpts === void 0 ? void 0 : baseOpts.labels,
+            ...specificOpts === null || specificOpts === void 0 ? void 0 : specificOpts.labels,
+        },
+        callableTrigger: {},
+    };
     func.run = handler;
     return func;
 }
-exports.onTaskDispatched = onTaskDispatched;
+exports.onCall = onCall;
 
 
 /***/ }),
@@ -64524,16 +64505,13 @@ var exports = __webpack_exports__;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.helloWorld = void 0;
 const params_1 = __nccwpck_require__(2794);
-const tasks_1 = __nccwpck_require__(2113);
+const https_1 = __nccwpck_require__(6274);
 // Making the parameterized variables
-const TASK_QUEUE_MAX_CONCURRENT_DISPATCHES = (0, params_1.defineInt)("TASK_QUEUE_MAX_CONCURRENT_DISPATCHES");
-const SAY_HELLO = (0, params_1.defineInt)("SAY_HELLO");
+const REGION = (0, params_1.defineString)("REGION");
+const TIMEOUT_SECONDS = (0, params_1.defineInt)("TIMEOUT_SECONDS");
+const SAY_HELLO = (0, params_1.defineString)("SAY_HELLO");
 // Firebase function
-exports.helloWorld = (0, tasks_1.onTaskDispatched)({
-    rateLimits: {
-        maxConcurrentDispatches: TASK_QUEUE_MAX_CONCURRENT_DISPATCHES,
-    },
-}, (req) => {
+exports.helloWorld = (0, https_1.onRequest)({ region: REGION, timeoutSeconds: TIMEOUT_SECONDS }, (req, res) => {
     console.log(SAY_HELLO.value());
 });
 
